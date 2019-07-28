@@ -5,29 +5,31 @@ var keys = require('./keys.js');
 var newSpotify = new Spotify(keys.spotify);
 var axios = require("axios");
 //var fs = require('fs');
-var bandsUrl = "https://rest.bandsintown.com/artists/" + process.argv[3] + "/events?app_id=codingbootcamp"
+
 var action = process.argv[2];
 
-//http://www.omdbapi.com/?i=tt3896198&apikey=ea09baf7
+
 
 
 switch (action) {
     case 'concert-this':
-        bandsInTown(process.argv.slice(2).join(""));
+        bandsInTown(process.argv.slice(2).join(" "));
         break;
     case 'spotify-this-song':
-        spotify(process.argv[3])
+        spotify(process.argv.slice(2).join(" "))
         break;
     case 'movie-this':
+        movieThis(process.argv.slice(2).join(" "))
         break;
     case 'do-what-it-says':
         break;
 }
 
 function bandsInTown(artist) {
+    var band = process.argv.slice(2).join(" ");
+    var bandsUrl = "https://rest.bandsintown.com/artists/" + band + "/events?app_id=codingbootcamp";
     axios.get(bandsUrl).then(
         function (response) {
-
             console.log('Name of Venue: ' + response.data[0].venue.name);
             console.log('Venue Location: ' + response.data[0].venue.city + ', ' + response.data[0].venue.region + ' ' + response.data[0].venue.country)
             console.log('Event Date: ' + response.data[1].datetime)
@@ -56,5 +58,25 @@ function spotify(track) {
         });
 }
 function movieThis(movieName) {
-    
+    var movie;
+    if (process.argv[3] === undefined) {
+        movie = 'Mr. Nobody';
+    } else {
+        movie = process.argv.slice(2).join(" ");
+    }
+    var omdbUrl = "http://www.omdbapi.com/?t=" + movie + "&apikey=ea09baf7"
+    axios.get(omdbUrl).then(
+        function (response) {
+            console.log("Title: " + response.data.Title);
+            console.log("Year Released: " + response.data.Released);
+            console.log("IMDB Rating: " + response.data.imdbRating);
+            console.log("Rotten Tomatoes Rating: " + response.data.Ratings[1].Source + response.data.Ratings[1].Value);
+            console.log("Countries Movie was Produced in: " + response.data.Country);
+            console.log("Movie Languages: " + response.data.Language);
+            console.log("Plot of the Movie: " + response.data.Plot);
+            console.log("Cast: " + response.data.Actors);            
+        })
+        .catch(function (error) {
+            console.log('error');
+        })
 }
