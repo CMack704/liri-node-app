@@ -6,6 +6,7 @@ var newSpotify = new Spotify(keys.spotify);
 var axios = require("axios");
 var fs = require('fs');
 var action = process.argv[2];
+var moment = require('moment');
 
 
 
@@ -32,7 +33,7 @@ function bandsInTown(artist) {
         function (response) {
             console.log('Name of Venue: ' + response.data[0].venue.name);
             console.log('Venue Location: ' + response.data[0].venue.city + ', ' + response.data[0].venue.region + ' ' + response.data[0].venue.country)
-            console.log('Event Date: ' + response.data[1].datetime)
+            console.log('Event Date: ' + moment(response.data[1].datetime).format("MM/DD/YYYY"))
         })
         .catch(function (error) {
             console.log('error');
