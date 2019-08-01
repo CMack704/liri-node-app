@@ -7,27 +7,27 @@ var axios = require("axios");
 var fs = require('fs');
 var action = process.argv[2];
 var moment = require('moment');
-
+var term = process.argv.slice(3).join(' ');
 
 
 
 switch (action) {
     case 'concert-this':
-        bandsInTown(process.argv[3]);
+        bandsInTown(term);
         break;
     case 'spotify-this-song':
-        spotify(process.argv[3])
+        spotify(term)
         break;
     case 'movie-this':
-        movieThis(process.argv[3])
+        movieThis(term)
         break;
     case 'do-what-it-says':
-        doThis(process.argv[3])
+        doThis(term)
         break;
 }
 
 function bandsInTown(artist) {
-    var band = process.argv[3];
+    var band = term;
     var bandsUrl = "https://rest.bandsintown.com/artists/" + band + "/events?app_id=codingbootcamp";
     axios.get(bandsUrl).then(
         function (response) {
@@ -41,10 +41,10 @@ function bandsInTown(artist) {
 }
 function spotify(track) {
     var track;
-    if (process.argv[3] === undefined) {
+    if (term === undefined) {
         track = 'The Sign ace of base'
     } else {
-        track = process.argv[3]
+        track = term
     }
     newSpotify
         .search({ type: 'track', query: track })
@@ -60,10 +60,10 @@ function spotify(track) {
 }
 function movieThis(movieName) {
     var movie;
-    if (process.argv[3] === undefined) {
+    if (term === undefined) {
         movie = 'Mr. Nobody';
     } else {
-        movie = process.argv[3];
+        movie = term;
     }
     var omdbUrl = "http://www.omdbapi.com/?t=" + movie + "&apikey=ea09baf7"
     axios.get(omdbUrl).then(
